@@ -1,0 +1,16 @@
+FROM node:16.13-alpine as compilation
+
+WORKDIR /app
+COPY front/ .
+RUN npm install
+RUN npm i -g @angular/cli
+RUN npm run build
+
+FROM bunkerity/bunkerized-nginx as prod
+
+WORKDIR /app
+
+COPY --from=compilation /app/ /www/
+ADD api.conf /http-confs/api.conf
+EXPOSE 80
+
