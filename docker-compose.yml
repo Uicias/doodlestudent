@@ -1,0 +1,90 @@
+version: '3'
+
+services:
+  front:
+    image: tlc/front
+    restart: unless-stopped
+    container_name: 'Front-end-TLC'
+    build:
+      context: .
+      dockerfile: Dockerfile-front
+    ports:
+      - 8085:8080
+      - 4445:4443
+    environment:
+      # Ensemble des endpoints pour lequel il générera des certificats
+      - SERVER_NAME=tufe.diverse-team.fr pad.tufe.diverse-team.fr myadmin.tufe.diverse-team.fr
+      - SERVE_FILES=yes
+      - DISABLE_DEFAULT_SERVER=no
+      # Transmission de l'IP publique vers les containers
+      - PROXY_REAL_IP=yes
+      #      - MAX_CLIENT_SIZE=100m
+      #      - USE_ANTIBOT=captcha
+      # Configuration de letencrypt
+      - AUTO_LETS_ENCRYPT=no
+      # redirect du 80 vers 443 automatique
+      - REDIRECT_HTTP_TO_HTTPS=no
+      - USE_LIMIT_REQ=no
+      # Désactivation http2
+      - HTTP2=no
+      # Paramétrage des entêtes http
+      - FEATURE_POLICY=accelerometer 'none'; ambient-light-sensor 'none'; autoplay 'none'; camera 'none'; display-capture 'none'; document-domain 'none'; encrypted-media 'none'; fullscreen 'none'; geolocation 'none'; gyroscope 'none'; magnetometer 'none'; microphone 'none'; midi 'none'; payment 'none'; picture-in-picture 'none'; speaker 'none'; sync-xhr 'self'; usb 'none'; vibrate 'none'; vr 'none'
+    networks:
+      - back-db
+
+
+  db:
+    image: mysql
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=password1
+      - MYSQL_DATABASE=tlc
+      - MYSQL_USER=tlc
+      - MYSQL_PASSWORD=tlc
+    expose:
+      - '3306'
+    networks:
+      - back-db
+#    volumes:
+#      - my-db:/var/lib/mysql
+#    healthcheck:
+#      test: [ "CMD-SHELL", 'mysqladmin ping' ]
+#      interval: 10s
+#      timeout: 2s
+#      retries: 10
+#    restart: unless-stopped
+#    command: ['mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci']
+
+  back:
+    image: tlc/back
+    restart: always
+    container_name: back
+    build:
+      context: .
+      dockerfile: Dockerfile-back
+    environment:
+        - quarkus.datasource.jdbc.url=jdbc:mysql://db:3306/tlc?useUnicode=true&serverTimezone=Europe/Paris
+        - doodle.internalPadUrl=http://etherpad:9001/
+        - doodle.externalPadUrl=http://pad.tufe.diverse-team.fr:8085/
+    expose:
+      - '8081'
+    links:
+      - db
+    depends_on:
+      - db
+    networks:
+      - back-db
+  etherpad:
+    image: etherpad/etherpad:1.8
+    ports:
+      - "9001:9001"
+    volumes:
+      - ./APIKEY.txt:/opt/etherpad-lite/APIKEY.txt
+    networks:
+      - back-db
+
+volumes:
+  my-db:
+networks:
+  back-db:
