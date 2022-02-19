@@ -1,0 +1,3 @@
+This folder contains the hosted runner config.
+See: https://docs.github.com/en/actions/hosting-your-own-runners/adding-self-hosted-runners
+Once set-up launch the runner using ./run.cmd
