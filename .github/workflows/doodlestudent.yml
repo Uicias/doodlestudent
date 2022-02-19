@@ -13,7 +13,7 @@ jobs:
   build:
     runs-on: self-hosted
     steps:
-      - uses: actions/checkout@2
+      - uses: actions/checkout@v2
       - name: Clone de l'app
         run: git clone https://github.com/Uicias/doodlestudent.git
       - name: Build
