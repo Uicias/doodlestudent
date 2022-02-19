@@ -1,0 +1,28 @@
+name: doodlestudent CI
+
+on:
+  # lance une pipeline si push sur main
+  push:
+    branches:
+      - main
+  # lance une pipeline si lancement manuel
+  workflow_dispatch:
+
+jobs:
+  # Etape de build de l'app
+  build:
+    runs-on: self-hosted
+    steps:
+      - uses: action/checkout@2
+      - name: Clone de l'app
+        run: git clone https://github.com/Uicias/doodlestudent.git
+      - name: Build
+        run: |
+          cd doodlestudent
+          docker build . -f Dockerfile-front -t uicias/doodlestudentfront
+          docker build . -f Dockerfile-back -t uicias/doodlestudentback
+
+        #to continue: push sur docker hub si ok
+
+  # Etape de tests de l'app
+#  tests:
