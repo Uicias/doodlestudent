@@ -46,15 +46,6 @@ services:
       - '3306'
     networks:
       - back-db
-#    volumes:
-#      - my-db:/var/lib/mysql
-#    healthcheck:
-#      test: [ "CMD-SHELL", 'mysqladmin ping' ]
-#      interval: 10s
-#      timeout: 2s
-#      retries: 10
-#    restart: unless-stopped
-#    command: ['mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci']
 
   back:
     image: tlc/back
