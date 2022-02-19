@@ -16,3 +16,6 @@ En raison du blocage des VM à cause des failles Log4j, l'application n'a pas en
 ### Tache 4
 
 ### Tache 5
+Le fichier .github/workflows/doodlestudent.yml contient le paramétrage de la chaine d'intégration continue de l'application.
+Sous reserve de modification lors de l'avancé du projet, nous l'avons paramétré pour qu'une pipeline s'execute à chaque push sur la branche principale du projet: main. Le lancement d'une pipeline par action manuelle reste possible, par la présence du trigger de lancement `workflow_dispatch:`.
+Nous avons également instancié un runner github sur notre poste, le dossier actions-runner contient en local les paramétrages de ce runner.
