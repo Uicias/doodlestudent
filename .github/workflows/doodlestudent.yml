@@ -26,3 +26,18 @@ jobs:
 
   # Etape de tests de l'app
 #  tests:
+#     todo
+
+#  deploy:
+#    name: Deploiement
+#    needs: [build] #et tests
+#    runs-on: self-hosted
+#    steps:
+#      - uses: actions/checkout@v2
+#      - name: Deploiement sur la VM
+#        run: |
+#          cd doodlestudent
+#          scp -r . zprojet@148.60.11.205:/doodlestudent
+#          ssh zprojet@148.60.11.205
+#          cd /doodlestudent
+#          docker-compose up -d --build
